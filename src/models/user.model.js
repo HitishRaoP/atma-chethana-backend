@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    username: {
+      type: String,
+      required: true,
+    },
     email: {
       type: String,
       required: true,
@@ -21,12 +25,12 @@ const userSchema = new mongoose.Schema(
     department: {
       type: String,
     },
-    phoneNum: {
+    phone: {
       type: String,
     },
-    usn:{
-      type:String,
-    }
+    usn: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
