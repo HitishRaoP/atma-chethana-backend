@@ -1,6 +1,7 @@
 import Counsellor from "../models/counsellor.model.js";
 import { setCounsellorTokenAndCookies } from "../middlewares/jwt-auth.js";
 
+
 export const loginCounsellor = async (req, res) => {
   const { email, password } = req.body;
 
@@ -14,6 +15,9 @@ export const loginCounsellor = async (req, res) => {
     if (!counsellor) {
       return res.status(401).json({ message: "Counsellor Not found" });
     }
+
+
+
     if(counsellor.password !== password){
       return res.status(401).json({ message: "Incorrect Password"});
     }
