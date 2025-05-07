@@ -56,6 +56,7 @@ const setCounsellorTokenAndCookies = async (user, res) => {
     sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
     maxAge: 1 * 24 * 60 * 60 * 1000,
   });
+  return token;
 };
 
 const counsellorAuth = (req, res) => {

@@ -24,6 +24,9 @@ const userSchema = new mongoose.Schema(
     phoneNum: {
       type: String,
     },
+    usn:{
+      type:String,
+    }
   },
   { timestamps: true }
 );

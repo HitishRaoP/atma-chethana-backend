@@ -53,6 +53,11 @@ const createAppointment = async (req, res) => {
   const getAllAppointmens = async (req,res)=>{
     try{
 
+        // const token = req.headers;
+
+        
+
+
         const appointments = await Appointment.find();
 
         return res.json({success:true,appointments});

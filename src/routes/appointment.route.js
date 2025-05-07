@@ -11,7 +11,7 @@ import { userAuth, counsellorAuth } from '../middlewares/jwt-auth.js';
 appointmentRouter.post('/book-appointment',userAuth,createAppointment);
 
 
-appointmentRouter.get('/get-appointments',counsellorAuth,getAllAppointmens);
+appointmentRouter.get('/get-appointments',getAllAppointmens);
 
 
 

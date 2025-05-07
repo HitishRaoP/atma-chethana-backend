@@ -6,8 +6,6 @@ import { CounsellorRouter } from "./src/routes/councellor.route.js";
 import { AuthRouter } from "./src/routes/auth.route.js";
 import { appointmentRouter } from './src/routes/appointment.route.js';
 
-
-
 import connectDB from './src/db/db.js';
 
 async function init() {

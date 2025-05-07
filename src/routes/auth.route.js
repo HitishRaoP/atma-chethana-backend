@@ -5,8 +5,8 @@ import {
   logout,
   checkAuthorisation,
 } from "../controllers/auth.controllers.js";
-import { userAuth } from "../middlewares/jwt-auth.js";
-import { getUser } from "../controllers/user.controller.js";
+import { userAuth, counsellorAuth } from "../middlewares/jwt-auth.js";
+import { getUser, getAllUsers } from "../controllers/user.controller.js";
 
 const AuthRouter = Router();
 
@@ -19,5 +19,6 @@ AuthRouter.get("/logout", logout);
 AuthRouter.get("/check-auth", userAuth, checkAuthorisation);
 
 AuthRouter.get("/getUser", userAuth, getUser);
+AuthRouter.get("/getAllUser", counsellorAuth, getAllUsers);
 
 export { AuthRouter };
