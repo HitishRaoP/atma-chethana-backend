@@ -21,4 +21,5 @@ AuthRouter.get("/check-auth", userAuth, checkAuthorisation);
 AuthRouter.get("/getUser", userAuth, getUser);
 AuthRouter.get("/getAllUser", counsellorAuth, getAllUsers);
 
+
 export { AuthRouter };
