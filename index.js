@@ -6,6 +6,7 @@ import { CounsellorRouter } from "./src/routes/councellor.route.js";
 import { AuthRouter } from "./src/routes/auth.route.js";
 import { appointmentRouter } from "./src/routes/appointment.route.js";
 import connectDB from "./src/db/db.js";
+import { UserRouter } from "./src/routes/user.route.js";
 
 async function init() {
   const app = express();
@@ -37,6 +38,8 @@ async function init() {
   app.use("/api/counsellor", CounsellorRouter);
 
   app.use("/api/appointment", appointmentRouter);
+
+  app.use("/api/student", UserRouter);
 
   app.listen(process.env.PORT, () => {
     console.log(`Server is Running on http://localhost:${process.env.PORT}`);
