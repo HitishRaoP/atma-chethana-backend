@@ -11,8 +11,11 @@ export const loginCounsellor = async (req, res) => {
   try {
     const counsellor = await Counsellor.findOne({ email });
 
-    if (!counsellor || counsellor.password !== password) {
-      return res.status(401).json({ message: "Invalid email or password" });
+    if (!counsellor) {
+      return res.status(401).json({ message: "Counsellor Not found" });
+    }
+    if(counsellor.password !== password){
+      return res.status(401).json({ message: "Incorrect Password"});
     }
 
     setCounsellorTokenAndCookies(counsellor, res);
