@@ -59,3 +59,30 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+
+
+export const getFilteredUsers = async (req, res) => {
+  const { dept, sem, name } = req.query;
+
+  const details = {};
+
+  if(dept) details.department=dept;
+  if(sem) details.semester=sem;
+  if(name) details.fullName=name;
+
+  try {
+
+    if(Object.keys(details).length == 0){
+      return res.json({message:"No filter"});
+    }
+
+    const users = await User.find(details);
+    // console.log(users);
+    return res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+

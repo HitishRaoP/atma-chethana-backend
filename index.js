@@ -4,15 +4,10 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { CounsellorRouter } from "./src/routes/councellor.route.js";
 import { AuthRouter } from "./src/routes/auth.route.js";
-<<<<<<< HEAD
-import { appointmentRouter } from './src/routes/appointment.route.js';
 
-import connectDB from './src/db/db.js';
-=======
 import { appointmentRouter } from "./src/routes/appointment.route.js";
 import connectDB from "./src/db/db.js";
 import { UserRouter } from "./src/routes/user.route.js";
->>>>>>> 36443e1d85a3ee5ed374014659cf188e9086febf
 
 async function init() {
   const app = express();

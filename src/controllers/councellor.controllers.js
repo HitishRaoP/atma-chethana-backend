@@ -120,7 +120,9 @@ export const sendEmail = async (req,res)=>{
       subject:`Appointment Confirmation`,
       html: `
        
-      
+      <h1> Hello ${user.fullName} </h1>
+      <h2> Your Appointment Has Been SuccessFully Booked </h2>
+   
       `,
     }
     const info = await transporter.sendMail(mailOption);
