@@ -16,4 +16,7 @@ appointmentRouter.get("/", getAllAppointmens);
 // Update appointment status - no auth required
 appointmentRouter.patch("/:appointmentId/status", updateAppointmentStatus);
 
+// Update appointment - no auth required
+appointmentRouter.patch("/:appointmentId", updateAppointment);
+
 export { appointmentRouter };

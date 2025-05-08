@@ -3,140 +3,225 @@ import { Appointment } from "../models/appointment.model.js";
 import { User } from "../models/user.model.js";
 
 export const createAppointment = async (req, res) => {
-	try {
-		const {
-			name,
-			usn,
-			semester,
-			department,
-			reason,
-			date,
-			time,
-			status,
-			emailData,
-		} = req.body;
+  try {
+    const {
+      name,
+      usn,
+      semester,
+      department,
+      reason,
+      date,
+      time,
+      status,
+      emailData,
+    } = req.body;
 
-		// First find the user to get userId
-		const user = await User.findOne({ usn });
-		if (!user) {
-			return res.status(404).json({
-				success: false,
-				message: "User not found",
-			});
-		}
+    // First find the user to get userId
+    const user = await User.findOne({ usn });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
 
-		// Create new appointment
-		const appointment = new Appointment({
-			userId: user._id,
-			studentName: name,
-			usn,
-			semester,
-			department,
-			reason,
-			date,
-			time,
-			status,
-		});
+    // Create new appointment
+    const appointment = new Appointment({
+      userId: user._id,
+      studentName: name,
+      usn,
+      semester,
+      department,
+      reason,
+      date,
+      time,
+      status,
+    });
 
-		await appointment.save();
+    await appointment.save();
 
-		// Send confirmation email
-		try {
-			const mailOptions = {
-				from: "Atma Chethana <khalandermohammed734@gmail.com>",
-				to: user.email,
-				subject: emailData.subject,
-				html: emailData.message,
-			};
+    // Send confirmation email
+    try {
+      const mailOptions = {
+        from: "Atma Chethana <khalandermohammed734@gmail.com>",
+        to: user.email,
+        subject: emailData.subject,
+        html: emailData.message,
+      };
 
-			const response = await transporter.sendMail(mailOptions);
-			console.log("Mail sent successfully:", response);
+      const response = await transporter.sendMail(mailOptions);
+      console.log("Mail sent successfully:", response);
 
-			res.status(201).json({
-				success: true,
-				message: "Appointment created and confirmation email sent successfully",
-				appointment,
-			});
-		} catch (emailError) {
-			console.error("Error sending email:", emailError);
-			res.status(201).json({
-				success: true,
-				message: "Appointment created but email could not be sent",
-				appointment,
-			});
-		}
-	} catch (error) {
-		console.error("Error creating appointment:", error);
-		res.status(500).json({
-			success: false,
-			message: "Error creating appointment",
-			error: error.message,
-		});
-	}
+      res.status(201).json({
+        success: true,
+        message: "Appointment created and confirmation email sent successfully",
+        appointment,
+      });
+    } catch (emailError) {
+      console.error("Error sending email:", emailError);
+      res.status(201).json({
+        success: true,
+        message: "Appointment created but email could not be sent",
+        appointment,
+      });
+    }
+  } catch (error) {
+    console.error("Error creating appointment:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error creating appointment",
+      error: error.message,
+    });
+  }
 };
 
 const getAllAppointmens = async (req, res) => {
-	try {
-		const appointments = await Appointment.find().sort({ createdAt: -1 });
-		return res.json({ success: true, appointments });
-	} catch (error) {
-		console.log("Error in Getting Appointments ", error);
-		return res.status(500).json({
-			success: false,
-			message: `Error in Getting Appointments ${error}`,
-		});
-	}
+  try {
+    const appointments = await Appointment.find().sort({ createdAt: -1 });
+    return res.json({ success: true, appointments });
+  } catch (error) {
+    console.log("Error in Getting Appointments ", error);
+    return res.status(500).json({
+      success: false,
+      message: `Error in Getting Appointments ${error}`,
+    });
+  }
 };
 
 const updateAppointmentStatus = async (req, res) => {
-	try {
-		const { appointmentId } = req.params;
-		const { status } = req.body;
+  try {
+    const { appointmentId } = req.params;
+    const { status } = req.body;
 
-		if (!["scheduled", "completed", "cancelled"].includes(status)) {
-			return res.status(400).json({
-				success: false,
-				message: "Invalid status value",
-			});
-		}
+    if (!["scheduled", "completed", "cancelled"].includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid status value",
+      });
+    }
 
-		const appointment = await Appointment.findByIdAndUpdate(
-			appointmentId,
-			{ status },
-			{ new: true },
-		);
+    const appointment = await Appointment.findByIdAndUpdate(
+      appointmentId,
+      { status },
+      { new: true }
+    );
 
-		if (!appointment) {
-			return res.status(404).json({
-				success: false,
-				message: "Appointment not found",
-			});
-		}
+    if (!appointment) {
+      return res.status(404).json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
 
-		// If appointment is completed, update user's session history
-		if (status === "completed") {
-			const user = await User.findById(appointment.userId);
-			if (user) {
-				user.sessionHistory.push({
-					date: appointment.date,
-					reason: appointment.reason,
-					status: "completed",
-				});
-				await user.save();
-			}
-		}
+    // If appointment is completed, update user's session history
+    if (status === "completed") {
+      const user = await User.findById(appointment.userId);
+      if (user) {
+        user.sessionHistory.push({
+          date: appointment.date,
+          reason: appointment.reason,
+          status: "completed",
+        });
+        await user.save();
+      }
+    }
 
-		return res.json({
-			success: true,
-			appointment,
-		});
-	} catch (error) {
-		console.error("Error updating appointment status:", error);
-		return res.status(500).json({
-			success: false,
-			message: "Error updating appointment status",
-		});
-	}
+    return res.json({
+      success: true,
+      appointment,
+    });
+  } catch (error) {
+    console.error("Error updating appointment status:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error updating appointment status",
+    });
+  }
 };
 
-export { getAllAppointmens, updateAppointmentStatus };
+// Update appointment - no auth required
+const updateAppointment = async (req, res) => {
+  try {
+    const { appointmentId } = req.params;
+    const { date, time, status, emailData } = req.body;
+
+    // Only allow valid status values
+    if (
+      status &&
+      !["pending", "scheduled", "completed", "cancelled"].includes(status)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid status value",
+      });
+    }
+
+    // Build update object
+    const update = {};
+    if (date) update.date = date;
+    if (time) update.time = time;
+    if (status) update.status = status;
+
+    // Update the appointment
+    const appointment = await Appointment.findByIdAndUpdate(
+      appointmentId,
+      update,
+      { new: true }
+    );
+
+    if (!appointment) {
+      return res.status(404).json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
+
+    // Send confirmation email if requested
+    if (emailData) {
+      const user = await User.findById(appointment.userId);
+      if (user) {
+        try {
+          const mailOptions = {
+            from: "Atma Chethana <khalandermohammed734@gmail.com>",
+            to: user.email,
+            subject: emailData.subject,
+            html: emailData.message,
+          };
+          await transporter.sendMail(mailOptions);
+        } catch (emailError) {
+          console.error("Error sending email:", emailError);
+          // Don't fail the request if email fails
+        }
+      }
+    }
+
+    // If appointment is completed, update user's session history
+    if (status === "completed") {
+      const user = await User.findById(appointment.userId);
+      if (user) {
+        user.sessionHistory.push({
+          date: appointment.date,
+          reason: appointment.reason,
+          status: "completed",
+        });
+        await user.save();
+      }
+    }
+
+    return res.json({
+      success: true,
+      message: emailData
+        ? "Appointment updated and confirmation email sent successfully"
+        : "Appointment updated successfully",
+      appointment,
+    });
+  } catch (error) {
+    console.error("Error updating appointment:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error updating appointment",
+    });
+  }
+};
+
+export { getAllAppointmens, updateAppointmentStatus, updateAppointment };

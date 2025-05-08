@@ -1,10 +1,8 @@
+import "dotenv/config";
 import { faker } from "@faker-js/faker";
-import dotenv from "dotenv";
 import mongoose from "mongoose";
-import Appointment from "../models/appointment.model.js";
+import { Appointment } from "../models/appointment.model.js";
 import { User } from "../models/user.model.js";
-
-dotenv.config();
 
 const MONGODB_URI =
 	process.env.MONGODB_URI || "mongodb://localhost:27017/atma-chethana";
@@ -118,6 +116,9 @@ const generateUserData = () => {
 
 const generateAppointmentData = (user) => {
 	const appointmentDate = faker.date.future();
+	// Randomly assign status for variety
+	const possibleStatuses = ["pending", "scheduled", "completed", "cancelled"];
+	const status = faker.helpers.arrayElement(possibleStatuses);
 	return {
 		userId: user._id,
 		studentName: user.fullName,
@@ -138,7 +139,7 @@ const generateAppointmentData = (user) => {
 			minute: "2-digit",
 			hour12: true,
 		}),
-		status: faker.helpers.arrayElement(["scheduled", "completed", "cancelled"]),
+		status: status,
 		createdAt: faker.date.recent(),
 	};
 };
