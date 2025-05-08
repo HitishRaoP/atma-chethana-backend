@@ -9,7 +9,9 @@ import {
 const CounsellorRouter = Router();
 
 CounsellorRouter.post("/signup", createCounsellor);
+
 CounsellorRouter.post("/login", loginCounsellor);
+
 CounsellorRouter.post("/sendMail", sendEmail);
 
 CounsellorRouter.get("/", getAllCounsellors);

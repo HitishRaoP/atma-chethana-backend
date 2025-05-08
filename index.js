@@ -28,6 +28,8 @@ async function init() {
 
   connectDB();
 
+  app.use('/public', express.static('public'));
+
   app.get("/", (req, res) => {
     res.json({
       message: "Server is Up and Running",
