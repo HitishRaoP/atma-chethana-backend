@@ -2,11 +2,12 @@ import nodemailer from "nodemailer";
 import "dotenv/config";
 import { SERVER_CONSTANTS } from "../constants/server-constants.js";
 
+
 export const transporter = nodemailer.createTransport({
-  host: SERVER_CONSTANTS.SMPT.HOST,
-  port: SERVER_CONSTANTS.SMPT.PORT,
+  host: 'smtp-relay.brevo.com',
+  port: 587,
   auth: {
-    user: SERVER_CONSTANTS.SMPT.USER,
-    pass: SERVER_CONSTANTS.SMPT.PASSWORD,
+    user: '8a038b001@smtp-brevo.com',
+    pass: '2GjUdtSJNX0L91pT'
   },
 });

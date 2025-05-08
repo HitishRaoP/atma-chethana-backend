@@ -2,23 +2,18 @@ import { Router } from "express";
 import {
   createAppointment,
   getAllAppointmens,
+  updateAppointmentStatus,
 } from "../controllers/appointment.controllers.js";
-import { userAuth } from "../middlewares/jwt-auth.js";
 
 const appointmentRouter = Router();
 
-appointmentRouter.post("/book-appointment", userAuth, createAppointment);
+// Create new appointment - no auth required
+appointmentRouter.post("/book-appointment", createAppointment);
 
+// Get all appointments - no auth required
 appointmentRouter.get("/", getAllAppointmens);
 
-import { counsellorAuth } from '../middlewares/jwt-auth.js';
-
-
-appointmentRouter.post('/book-appointment',userAuth,createAppointment);
-
-
-appointmentRouter.get('/get-appointments',getAllAppointmens);
-
-
+// Update appointment status - no auth required
+appointmentRouter.patch("/:appointmentId/status", updateAppointmentStatus);
 
 export { appointmentRouter };

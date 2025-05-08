@@ -1,11 +1,7 @@
 import Counsellor from "../models/counsellor.model.js";
 import { setCounsellorTokenAndCookies } from "../middlewares/jwt-auth.js";
-
 import { transporter } from "../config/nodemailer.js";
-
 import {User} from '../models/user.model.js';
-
-
 import bcrypt from "bcryptjs";
 
 
@@ -27,7 +23,7 @@ export const createCounsellor = async (req,res)=>{
     const hashedPassword = await bcrypt.hash(password, saltRound);
 
 
-    // setCounsellorTokenAndCookies(counsellor, res); 
+    // setCounsellorTokenAndCookies(counsellor, res);
 
     const newCounsellor = await Counsellor.create({
       email,
@@ -41,7 +37,7 @@ export const createCounsellor = async (req,res)=>{
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error", error: error.message });
-  } 
+  }
 }
 
 
@@ -98,8 +94,7 @@ export const getAllCounsellors = async (req,res)=>{
 
 export const sendEmail = async (req,res)=>{
   try{
-
-    const { usn } = req.body;
+    const { usn, subject, message, senderEmail } = req.body;
 
     if(!usn){
       return res.status(400).json({message:`USN is required`});
@@ -113,21 +108,18 @@ export const sendEmail = async (req,res)=>{
 
     const userEmail = user.email;
 
-
     const mailOption = {
-      from:`Atma Chethana <${process.env.SENDER_EMAIL_SMT}>`,
-      to:userEmail,
-      subject:`Appointment Confirmation`,
-      html: `
-       
-      <h1> Hello ${user.fullName} </h1>
-      <h2> Your Appointment Has Been SuccessFully Booked </h2>
-   
+      from: `Atma Chethana <khalandermohammed734@gmail.com>`,
+      to: userEmail,
+      subject: subject || 'Appointment Confirmation',
+      html: message || `
+        <h1>Hello ${user.fullName}</h1>
+        <h2>Your Appointment Has Been Successfully Booked</h2>
       `,
     }
     const info = await transporter.sendMail(mailOption);
 
-    return res.status(200).json({success:true,message:`Email Sent SuccessFully ${info} `});
+    return res.status(200).json({success:true, message:`Email Sent Successfully ${info}`});
 
   }catch(error){
     console.error(error);

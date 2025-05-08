@@ -8,26 +8,44 @@ import { SERVER_CONSTANTS } from "../src/constants/server-constants.js";
 const generateRandomAppointment = (userId) => {
   return {
     userId,
-    studentName: faker.person.firstName(),
+    studentName: faker.person.fullName(),
     usn: faker.helpers.arrayElement([
-      faker.random.arrayElement(["1BM", "1MC", "1ME", "1CS"]),
-    ]), // Modify here to match the user format
-    semester: Math.floor(Math.random() * 8) + 1,
+      faker.helpers.arrayElement(["1BM22CS", "1BM22IT", "1BM22EC", "1BM22EE"]),
+    ]) + faker.number.int({ min: 100, max: 999 }).toString().padStart(3, "0"),
+    semester: faker.helpers.arrayElement(["1st Sem", "2nd Sem", "3rd Sem", "4th Sem", "5th Sem", "6th Sem", "7th Sem", "8th Sem"]),
     department: faker.helpers.arrayElement([
-      "Computer Science",
-      "Electrical Engineering",
+      "Computer Science and Engineering",
+      "Information Science and Engineering",
+      "Electronics and Communication Engineering",
+      "Electrical and Electronics Engineering",
       "Mechanical Engineering",
       "Civil Engineering",
     ]),
     reason: faker.helpers.arrayElement([
-      "Exam Preparation",
-      "Project Discussion",
-      "Coursework",
-      "Study Materials",
-      "Consultation",
+      "Academic Performance",
+      "Career Guidance",
+      "Personal Issues",
+      "Stress Management",
+      "Time Management",
+      "Study Skills",
     ]),
-    isDelayed: faker.datatype.boolean(),
+    status: faker.helpers.arrayElement(['scheduled', 'completed', 'cancelled']),
     createdAt: faker.date.past(),
+  };
+};
+
+const generateRandomSession = () => {
+  return {
+    date: faker.date.past(),
+    reason: faker.helpers.arrayElement([
+      "Academic Performance",
+      "Career Guidance",
+      "Personal Issues",
+      "Stress Management",
+      "Time Management",
+      "Study Skills",
+    ]),
+    status: faker.helpers.arrayElement(['completed', 'scheduled', 'cancelled'])
   };
 };
 
@@ -36,32 +54,10 @@ const seed = async () => {
     await mongoose.connect(SERVER_CONSTANTS.MONGODB_URI);
     console.log("Connected to MongoDB");
 
-    const users = await User.find();
-    if (users.length === 0) {
-      console.log("No users found, please add users first.");
-      return;
-    }
-
-    const appointments = [];
-    for (let i = 0; i < 10; i++) {
-      const userId = users[i % users.length]._id;
-      const appointment = generateRandomAppointment(userId);
-      appointments.push(appointment);
-    }
-
-    await Appointment.insertMany(appointments);
-    console.log("Appointments seeded successfully");
-
-    mongoose.connection.close();
-  } catch (error) {
-    console.error("Error seeding database:", error);
-  }
-};
-
-const seedUsers = async () => {
-  try {
-    await mongoose.connect(SERVER_CONSTANTS.MONGODB_URI);
-    console.log("Connected to MongoDB");
+    // Clear existing data
+    await User.deleteMany({});
+    await Appointment.deleteMany({});
+    console.log("Cleared existing data");
 
     const users = [];
     const generateUSN = () => {
@@ -79,42 +75,57 @@ const seedUsers = async () => {
       return `1BM${year}${departmentCode}${rollNo}`;
     };
 
+    // Generate users with session history
     for (let i = 0; i < 10; i++) {
       const user = {
         fullName: faker.person.fullName(),
-        username: faker.internet.username(),
+        username: faker.internet.userName(),
         email: faker.internet.email(),
         password: faker.internet.password(),
         semester: faker.helpers.arrayElement([
-          "1",
-          "2",
-          "3",
-          "4",
-          "5",
-          "6",
-          "7",
-          "8",
+          "1st Sem",
+          "2nd Sem",
+          "3rd Sem",
+          "4th Sem",
+          "5th Sem",
+          "6th Sem",
+          "7th Sem",
+          "8th Sem",
         ]),
         department: faker.helpers.arrayElement([
-          "Computer Science",
-          "Electrical",
-          "Mechanical",
-          "Civil",
+          "Computer Science and Engineering",
+          "Information Science and Engineering",
+          "Electronics and Communication Engineering",
+          "Electrical and Electronics Engineering",
+          "Mechanical Engineering",
+          "Civil Engineering",
         ]),
         phone: faker.phone.number(),
         usn: generateUSN(),
+        soul_score: faker.number.int({ min: 0, max: 100 }),
+        sessionHistory: Array.from({ length: faker.number.int({ min: 0, max: 5 }) }, generateRandomSession)
       };
       users.push(user);
     }
 
-    await User.insertMany(users);
-    console.log("Seed data inserted successfully");
-  } catch (err) {
-    console.error("Error inserting seed data:", err);
-  } finally {
-    mongoose.disconnect();
-    console.log("MongoDB connection closed");
+    const createdUsers = await User.insertMany(users);
+    console.log("Users seeded successfully");
+
+    // Generate appointments
+    const appointments = [];
+    for (let i = 0; i < 20; i++) {
+      const userId = createdUsers[i % createdUsers.length]._id;
+      const appointment = generateRandomAppointment(userId);
+      appointments.push(appointment);
+    }
+
+    await Appointment.insertMany(appointments);
+    console.log("Appointments seeded successfully");
+
+    mongoose.connection.close();
+  } catch (error) {
+    console.error("Error seeding database:", error);
   }
 };
 
-seedUsers();
+seed();

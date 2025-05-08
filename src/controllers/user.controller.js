@@ -18,6 +18,24 @@ export const getUser = async (req, res) => {
   }
 };
 
+export const getUserByUSN = async (req, res) => {
+  try {
+    const { usn } = req.query;
+    const user = await User.findOne({ usn });
+
+    if (!user) {
+      return res.json({ success: false, message: `User Doesn't Exist` });
+    }
+
+    res.json({
+      success: true,
+      userData: user,
+    });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
 export const createUser = async (req, res) => {
   try {
     const user = await User.create(req.body);
@@ -60,22 +78,17 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-
-
-
 export const getFilteredUsers = async (req, res) => {
   const { dept, sem, name } = req.query;
-
   const details = {};
 
-  if(dept) details.department=dept;
-  if(sem) details.semester=sem;
-  if(name) details.fullName=name;
+  if (dept) details.department = dept;
+  if (sem) details.semester = sem;
+  if (name) details.fullName = name;
 
   try {
-
-    if(Object.keys(details).length == 0){
-      return res.json({message:"No filter"});
+    if (Object.keys(details).length == 0) {
+      return res.json({ message: "No filter" });
     }
 
     const users = await User.find(details);
@@ -85,4 +98,3 @@ export const getFilteredUsers = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
