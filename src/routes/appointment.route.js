@@ -3,7 +3,7 @@ import {
   createAppointment,
   getAllAppointmens,
   updateAppointmentStatus,
-} from "../controllers/appointment.controllers.js";
+} from "../controllers/appointment.controller.js";
 
 const appointmentRouter = Router();
 
