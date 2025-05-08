@@ -1,8 +1,8 @@
 import { Router } from "express";
 import {
-  createAppointment,
-  getAllAppointmens,
-  updateAppointmentStatus,
+	createAppointment,
+	getAllAppointmens,
+	updateAppointmentStatus,
 } from "../controllers/appointment.controller.js";
 
 const appointmentRouter = Router();

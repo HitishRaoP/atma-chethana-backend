@@ -1,12 +1,12 @@
 import { Router } from "express";
 import {
-  signup,
-  login,
-  logout,
-  checkAuthorisation,
+	checkAuthorisation,
+	login,
+	logout,
+	signup,
 } from "../controllers/auth.controllers.js";
-import { userAuth, counsellorAuth } from "../middlewares/jwt-auth.js";
-import { getUser, getAllUsers } from "../controllers/user.controller.js";
+import { getAllUsers, getUser } from "../controllers/user.controller.js";
+import { counsellorAuth, userAuth } from "../middlewares/jwt-auth.js";
 
 const AuthRouter = Router();
 
@@ -20,6 +20,5 @@ AuthRouter.get("/check-auth", userAuth, checkAuthorisation);
 
 AuthRouter.get("/getUser", userAuth, getUser);
 AuthRouter.get("/getAllUser", counsellorAuth, getAllUsers);
-
 
 export { AuthRouter };
