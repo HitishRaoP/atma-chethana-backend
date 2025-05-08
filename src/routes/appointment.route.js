@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
 	createAppointment,
 	getAllAppointmens,
+	updateAppointment,
 	updateAppointmentStatus,
 } from "../controllers/appointment.controller.js";
 
