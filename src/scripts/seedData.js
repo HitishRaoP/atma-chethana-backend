@@ -158,7 +158,23 @@ const createSpecificUser = async () => {
 		sessionHistory: generateSessionHistory(),
 	};
 
-	return await User.create(specificUserData);
+	const user = await User.create(specificUserData);
+
+	// Create at least one pending appointment for Hitish Rao
+	await Appointment.create({
+		userId: user._id,
+		studentName: user.fullName,
+		usn: user.usn,
+		semester: user.semester,
+		department: user.department,
+		reason: "Academic Performance",
+		date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
+		time: "10:00 AM",
+		status: "pending",
+		createdAt: new Date(),
+	});
+
+	return user;
 };
 
 const seedDatabase = async () => {
