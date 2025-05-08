@@ -93,7 +93,7 @@ const logout = async (req, res) => {
     res.clearCookie("jwtToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV == "production",
-      sameSite: process.env.NODE_ENV == "productioin" ? "none" : "strict",
+      sameSite: process.env.NODE_ENV == "production" ? "none" : "strict",
     });
 
     return res.json({ success: true, message: `User Logged Out SuccessFully` });

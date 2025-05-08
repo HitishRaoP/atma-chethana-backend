@@ -4,10 +4,10 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { CounsellorRouter } from "./src/routes/councellor.route.js";
 import { AuthRouter } from "./src/routes/auth.route.js";
-
 import { connectDB } from "./src/db/db.js";
 import { appointmentRouter } from "./src/routes/appointment.route.js";
 import { UserRouter } from "./src/routes/user.route.js";
+import { SERVER_CONSTANTS } from "./src/constants/server-constants.js";
 
 async function init() {
   const app = express();
@@ -18,7 +18,7 @@ async function init() {
 
   app.use(
     cors({
-      origin: `${process.env.FRONTEND_URL}`,
+      origin: `${SERVER_CONSTANTS.FRONTEND_URL}`,
       methods: "GET, POST, PUT, DELETE, PATCH, HEAD",
       credentials: true,
     })
@@ -42,8 +42,10 @@ async function init() {
 
   app.use("/api/student", UserRouter);
 
-  app.listen(process.env.PORT, () => {
-    console.log(`Server is Running on http://localhost:${process.env.PORT}`);
+  app.listen(SERVER_CONSTANTS.PORT, () => {
+    console.log(
+      `Server is Running on http://localhost:${SERVER_CONSTANTS.PORT}`
+    );
   });
 }
 

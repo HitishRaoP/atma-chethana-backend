@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { faker } from "@faker-js/faker";
 import Appointment from "../src/models/appointment.model.js";
 import { User } from "../src/models/user.model.js";
+import { SERVER_CONSTANTS } from "../src/constants/server-constants.js";
 
 const generateRandomAppointment = (userId) => {
   return {
@@ -32,7 +33,7 @@ const generateRandomAppointment = (userId) => {
 
 const seed = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(SERVER_CONSTANTS.MONGODB_URI);
     console.log("Connected to MongoDB");
 
     const users = await User.find();
@@ -59,7 +60,7 @@ const seed = async () => {
 
 const seedUsers = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(SERVER_CONSTANTS.MONGODB_URI);
     console.log("Connected to MongoDB");
 
     const users = [];
@@ -79,10 +80,9 @@ const seedUsers = async () => {
     };
 
     for (let i = 0; i < 10; i++) {
-
       const user = {
         fullName: faker.person.fullName(),
-        username:  faker.internet.username(),
+        username: faker.internet.username(),
         email: faker.internet.email(),
         password: faker.internet.password(),
         semester: faker.helpers.arrayElement([

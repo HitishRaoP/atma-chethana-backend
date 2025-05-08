@@ -1,11 +1,12 @@
 import "dotenv/config";
 import JWT from "jsonwebtoken";
+import { SERVER_CONSTANTS } from "../constants/server-constants.js";
 
 const setUserTokenAndCookie = (user, res) => {
   const payLoad = {
     id: user._id,
   };
-  const token = JWT.sign(payLoad, process.env.JWT_SECRET_KEY, {
+  const token = JWT.sign(payLoad, SERVER_CONSTANTS.JWT_SECRET_KEY, {
     expiresIn: "7d",
   });
 
@@ -26,7 +27,7 @@ const userAuth = async (req, res, next) => {
     });
   }
   try {
-    const user = JWT.verify(token, process.env.JWT_SECRET_KEY);
+    const user = JWT.verify(token, SERVER_CONSTANTS.JWT_SECRET_KEY);
     if (user.id) {
       req.user = user.id;
     } else {
@@ -46,7 +47,7 @@ const setCounsellorTokenAndCookies = async (user, res) => {
   const payLoad = {
     id: user._id,
   };
-  const token = JWT.sign(payLoad, process.env.JWT_SECRET_KEY, {
+  const token = JWT.sign(payLoad, SERVER_CONSTANTS.JWT_SECRET_KEY, {
     expiresIn: "1d",
   });
 
@@ -69,7 +70,7 @@ const counsellorAuth = (req, res) => {
   }
 
   try {
-    const user = JWT.verify(token, process.env.JWT_SECRET_KEY);
+    const user = JWT.verify(token, SERVER_CONSTANTS.JWT_SECRET_KEY);
     if (user.id) {
       req.user = user.id;
     } else {
